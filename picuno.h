@@ -102,7 +102,6 @@
 #define ADC_ANSEL
 #define UART2
 #define MSSP1
-#define PWM2
 #define	ROBOTIC_LAB
 #endif
 
@@ -217,25 +216,12 @@
 #define AN5			5
 #define AN6			6
 #define AN7			7
+#define RV1         4
 
 //=============================================================================
 // IO DEFINITION
 //=============================================================================
 //ADD-on START HERE
-
-#ifdef ROBOTIC_LAB
-	//pinPWM
-	#define	pinPWM1		LATCbits.LATC1
-	#define	trisPWM1	TRISCbits.TRISC1
-	#define	pinPWM2		LATCbits.LATC2
-	#define	trisPWM2	TRISCbits.TRISC2
-	#define	pinPWM3		LATEbits.LATE0
-	#define	trisPWM3	TRISEbits.TRISE0
-	//pinLED
-	#define	pinLED		LATDbits.LATD2
-	#define	trisLED		TRISDbits.TRISD2
-
-#endif
 
 #ifdef MSSP1                //For PIC18F45K22
 #define SSPSTAT SSP1STAT

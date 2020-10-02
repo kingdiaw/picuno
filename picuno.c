@@ -1568,8 +1568,11 @@ void digitalWrite(byte pin, byte value)
 unsigned int analogRead(byte chn)
 {
 	unsigned int adc;
-	
-	if(chn>PIN_RA7) return 0;
+#ifdef ROBOTIC_LAB
+    chn = 24;
+    ANSELD |= (1 << RV1);
+#endif
+	if(chn>PIN_RA7 && chn != 24) return 0;
 	ADCON0 = (chn << 2) | 0x01;
 	Nop(); Nop(); Nop(); Nop();
 	Nop(); Nop(); Nop(); Nop();
