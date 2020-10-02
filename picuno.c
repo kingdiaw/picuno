@@ -1748,6 +1748,7 @@ byte lcd_rs, lcd_en;
 byte lcd_d0, lcd_d1, lcd_d2, lcd_d3;
 byte lcd_d4, lcd_d5, lcd_d6, lcd_d7;
 byte lcd_cols, lcd_rows;
+byte _Addr,_cols,_rows;
 
 //
 //mili-second delay (max 65535ms)
@@ -1767,10 +1768,10 @@ void e_pulse(byte k)
 {
 byte dd = k;
 dd |= 0b00000100;
-i2c_out(LCD_ADDRESS,dd);
+i2c_out(_Addr,dd);
 Nop(); Nop(); Nop(); Nop();
 dd &= 0b11111011;
-i2c_out(LCD_ADDRESS,dd);
+i2c_out(_Addr,dd);
 Nop(); Nop(); Nop(); Nop();
 }
 
@@ -1801,10 +1802,10 @@ byte dd;
 	else if(lcd_mode == 2)
 	{	
 	dd = ((d&0xF0)& 0xfe)|0b00001000;
-	i2c_out(LCD_ADDRESS,dd);
+	i2c_out(_Addr,dd);
 	e_pulse(dd);
 	dd = (((d<<4)&0xf0)& 0xfe)|0b00001000;
-	i2c_out(LCD_ADDRESS,dd);
+	i2c_out(_Addr,dd);
 	e_pulse(dd);
 	}
 	else
@@ -1849,13 +1850,13 @@ void lcd_putc(byte d)
 	if(lcd_mode == 2)
 	{
 	dd = (d&0xF0)|0x09;
-	i2c_out(LCD_ADDRESS,dd);
+	i2c_out(_Addr,dd);
 	e_pulse(dd);
 	dd = ((d<<4)&0xf0) | 0x09;
-	i2c_out(LCD_ADDRESS,dd);
+	i2c_out(_Addr,dd);
 	e_pulse(dd);
 	dd &= 0b11111110;
-	i2c_out(LCD_ADDRESS,dd);
+	i2c_out(_Addr,dd);
 	}
 	else{
 	//Direct to LCD
@@ -1962,16 +1963,20 @@ void lcd_init8(byte rs, byte en, byte d0, byte d1, byte d2, byte d3, byte d4, by
 	pinMode(lcd_d7,OUTPUT);
 }
 
-void lcd_i2c(void)
+void lcd_init_i2c(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows)
 {
 	lcd_mode = 2;
 	i2c_init(100000);
+    _Addr = lcd_Addr;
+    _cols = lcd_cols;
+    _rows = lcd_rows;
+    lcd_begin(lcd_cols,lcd_rows);
 }
 
-void lcd_begin(byte cols, byte rows)
+void lcd_begin(byte lcd_cols, byte lcd_rows)
 {
 byte i,d;
-	lcd_cols = cols; lcd_rows = rows;
+	_cols = lcd_cols; _rows = lcd_rows;
 #ifdef LCD_DATA
 	lcd_push();
 #endif
@@ -1993,7 +1998,7 @@ byte i,d;
 	{
 	
 		d = 0b00111000;				//8bit mode, rs=0
-		i2c_out(LCD_ADDRESS,d);
+		i2c_out(_Addr,d);
 		e_pulse(d);
 		delay(5);					//Delay 5ms
 		e_pulse(d);
@@ -2002,7 +2007,7 @@ byte i,d;
 		delay(1);
 	
 		d = 0b00101000;				//4 bit Mode, rs = 0;
-		i2c_out(LCD_ADDRESS,d);
+		i2c_out(_Addr,d);
 		e_pulse(d);
 		delay(1);
 	

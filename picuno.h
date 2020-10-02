@@ -655,7 +655,7 @@ void lcd_write(char *data);			// print buffer string
 //
 void lcd_init4(byte rs, byte en, byte d4, byte d5, byte d6, byte d7);
 void lcd_init8(byte rs, byte en, byte d0, byte d1, byte d2, byte d3, byte d4, byte d5, byte d6, byte d7);
-void lcd_i2c(void);
+void lcd_init_i2c(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows);
 void e_pulse(byte k);
 void lcd_begin(byte cols, byte rows);
 
